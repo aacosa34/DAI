@@ -1,6 +1,7 @@
 # ./app/app.py
 from bson.json_util import dumps
-from flask import Flask, render_template, Response
+from bson import ObjectId
+from flask import Flask, render_template, Response, request, jsonify
 from pymongo import MongoClient
 import re
 from random import randint
@@ -215,3 +216,34 @@ def recetas_compuestas_de(cantidad):
     resJson = dumps(response)
 
     return Response(resJson, mimetype='application/json')
+
+
+# para devolver una lista (GET), o añadir (POST)
+@app.route('/api/recipes', methods=['GET', 'POST'])
+def api_1():
+    if request.method == 'GET':
+        lista = []
+        buscados = db.recipes.find().sort('name')
+        for recipe in buscados:
+            recipe['_id'] = str(recipe['_id'])  # paso a string
+            lista.append(recipe)
+        return jsonify(lista)
+
+    if request.method == 'POST':
+        # obtenemos el json
+        json = request.get_json()
+        # añadimos la receta
+        db.recipes.insert_one(json)
+        # devolvemos el json
+        return jsonify(json)
+
+
+# para devolver una, modificar o borrar
+@app.route('/api/recipes/<id>', methods=['GET', 'PUT', 'DELETE'])
+def api_2(id):
+    if request.method == 'GET':
+        try:
+            buscado = db.recipes.find_one({'_id': ObjectId(id)})
+            return jsonify(buscado)
+        except:
+            return jsonify({'error': 'Not found'}), 404
