@@ -3,8 +3,6 @@ from bson.json_util import dumps
 from bson import ObjectId
 from flask import Flask, render_template, Response, request, jsonify
 from pymongo import MongoClient
-import re
-from random import randint
 
 app = Flask(__name__)
 
@@ -20,230 +18,71 @@ def hello_world():
     return 'Hello, World!'
 
 
-@app.route('/fibonacci/<posicion>')
-def n_esimo_fibonacci(posicion):
-    posicion = int(posicion)
-    # Creamos una lista con los dos primeros números de la sucesión
-    fibonacci = [0, 1]
-
-    # Recorremos la lista hasta la posición indicada
-    for i in range(2, posicion + 1):
-        # Calculamos el siguiente número de la sucesión
-        fibonacci.append(fibonacci[i - 1] + fibonacci[i - 2])
-
-    return str(fibonacci[posicion])
-
-
-@app.route('/eratostenes/<numero>')
-def criba_eratostenes(numero):
-    numero = int(numero)
-
-    # Creamos una lista con todos los números naturales
-    # desde 2 hasta el número introducido
-    primos = list(range(2, numero + 1))
-
-    # Recorremos la lista de números buscando los primos
-    for n in primos:
-        # Cogemos el siguiente múltiplo que exista en la
-        # lista de valores y lo eliminamos
-        for j in range(n * n, numero + 1, n):
-            if j in primos:
-                primos.remove(j)
-
-    # Mostramos los números primos
-    resultado = f'Los números primos entre 2 y {numero} son:\n\n'
-
-    for primo in primos:
-        resultado += str(primo) + ' '
-
-    return resultado
-
-
-@app.route('/balanceada/<cadena>')
-def is_balanceada(cadena):
-    """
-        Funcion que comprueba si una cadena de [ y ]
-        está balanceada. Comprobamos si la expresion está balanceada
-        sumando por cada [ y restando por cada ], y si el resultado
-        es 0, está balanceada. Si en algún momento el valor acumulado
-        es menor que 0, deja de ser balanceada.
-    """
-
-    balanceada = 'La cadena está balanceada'
-    balanceo = 0
-
-    for caracter in cadena:
-        if balanceada:
-            if caracter == '[':
-                balanceo += 1
-            else:
-                balanceo -= 1
-
-            if balanceo < 0:
-                balanceada = 'La cadena está desbalanceada'
-        else:
-            return balanceada
-
-    return balanceada if balanceo == 0 else 'La cadena está desbalanceada'
-
-
-@app.route('/palabras/<cadena>')
-def palabraEspacioMayuscula(cadena):
-    """ Ejemplo: Apellido N """
-    encontrado = re.search(r'^[a-zA-Z]+ [A-Z]$', cadena)
-
-    if encontrado:
-        return encontrado.group()
-    else:
-        return 'No encontrado'
-
-
-@app.route('/email/<cadena>')
-def correoElectronico(cadena):
-    encontrado = re.search(r'[\w+.-]+@[\w+.-]+', cadena)
-
-    if encontrado:
-        return encontrado.group()
-    else:
-        return 'No encontrado'
-
-
-@app.route('/tarjeta/<cadena>')
-def tarjetasCredito(cadena):
-    encontrado = re.search(
-        r'^((([0-9]{4}\s){3})|(([0-9]{4}-){3}))[0-9]{4}$', cadena)
-
-    if encontrado:
-        return encontrado.group()
-    else:
-        return 'No encontrado'
-
-
-@app.route('/imagen')
-def imagen(name=None):
-    return render_template('image.html', name=name)
-
-
-@app.route('/svg')
-def svg(grafico=0):
-    grafico = randint(1, 4)
-    return render_template('svg.html', grafico=randint(1, 4))
-
-
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
 
 
-@app.route('/todas_las_recetas')
-def mongo():
-    # Encontramos los documentos de la coleccion "recipes"
-    recetas = db.recipes.find()  # devuelve un cursor(*), no una lista ni un iterador
-
-    lista_recetas = []
-    for receta in recetas:
-        app.logger.debug(receta)  # salida consola
-        lista_recetas.append(receta)
-
-    response = {
-        'len': len(lista_recetas),
-        'data': lista_recetas
-    }
-
-    # Convertimos los resultados a formato JSON
-    resJson = dumps(response)
-
-    # Devolver en JSON al cliente cambiando la cabecera http para especificar que es un json
-    return Response(resJson, mimetype='application/json')
-
-
-@app.route('/receta_de/<nombre>')
-def receta_de(nombre):
-    recetas = db.recipes.find({'slug': nombre})
-
-    lista_recetas = []
-    for receta in recetas:
-        app.logger.debug(receta)  # salida consola
-        lista_recetas.append(receta)
-
-    response = {
-        "len": len(lista_recetas),
-        "recetas": lista_recetas
-    }
-
-    resJson = dumps(response)
-
-    return Response(resJson, mimetype='application/json')
-
-
-@app.route('/recetas_con/<ingrediente>')
-def recetas_con(ingrediente):
-    # $elemMatch busca todas las coincidencias de lo que le pasemos
-    # en la busqueda interna dentro de la lista de ingredientes
-    recetas = db.recipes.find(
-        {"ingredients": {"$elemMatch": {"name": ingrediente}}})
-
-    lista_recetas = []
-    for receta in recetas:
-        app.logger.debug(receta)
-        lista_recetas.append(receta)
-
-    response = {
-        "len": len(lista_recetas),
-        "recetas": lista_recetas
-    }
-
-    resJson = dumps(response)
-
-    return Response(resJson, mimetype='application/json')
-
-
-@app.route('/recetas_compuestas_de/<cantidad>/ingredientes')
-def recetas_compuestas_de(cantidad):
-    recetas = db.recipes.find(
-        {"ingredients": {"$size": int(cantidad)}})
-
-    lista_recetas = []
-    for receta in recetas:
-        app.logger.debug(receta)
-        lista_recetas.append(receta)
-
-    response = {
-        "len": len(lista_recetas),
-        "recetas": lista_recetas
-    }
-
-    resJson = dumps(response)
-
-    return Response(resJson, mimetype='application/json')
-
-
 # para devolver una lista (GET), o añadir (POST)
-@app.route('/api/recipes', methods=['GET', 'POST'])
-def api_1():
-    if request.method == 'GET':
+@app.route('/api1/recipes', methods=['GET', 'POST'])
+def api1_1():
+    if request.method == 'GET' and request.args.get('con') is None:
         lista = []
         buscados = db.recipes.find().sort('name')
-        for recipe in buscados:
-            recipe['_id'] = str(recipe['_id'])  # paso a string
-            lista.append(recipe)
-        return jsonify(lista)
+        if buscados:
+            for recipe in buscados:
+                recipe['_id'] = str(recipe['_id'])  # paso a string
+                lista.append(recipe)
+            return jsonify(lista)
+        else:
+            return jsonify({'error': 'No hay recetas'}), 404
+    elif request.method == 'GET' and request.args.get('con'):
+        ingrediente = request.args.get('con')
+        recetas = db.recipes.find(
+            {"ingredients": {"$elemMatch": {"name": {"$regex": ingrediente, "$options": 'i'}}}})
+        lista_recetas = []
+        for receta in recetas:
+            app.logger.debug(receta)
+            lista_recetas.append(receta)
+
+        if lista_recetas:
+            response = {
+                "len": len(lista_recetas),
+                "recetas": lista_recetas
+            }
+
+            resJson = dumps(response)
+
+            return Response(resJson, mimetype='application/json')
+        
+        else:
+            return jsonify({'error': 'No hay recetas'}), 404
 
     if request.method == 'POST':
-        # obtenemos el json
-        json = request.get_json()
-        # añadimos la receta
-        db.recipes.insert_one(json)
-        # devolvemos el json
-        return jsonify(json)
-
+        recipe = db.recipes.insert_one(request.json).inserted_id
+        response = request.json
+        response['_id'] = str(recipe)
+        
+        return jsonify(response), 201
 
 # para devolver una, modificar o borrar
-@app.route('/api/recipes/<id>', methods=['GET', 'PUT', 'DELETE'])
-def api_2(id):
+@app.route('/api1/recipes/<id>', methods=['GET', 'PUT', 'DELETE'])
+def api1_2(id):
     if request.method == 'GET':
-        try:
-            buscado = db.recipes.find_one({'_id': ObjectId(id)})
-            return jsonify(buscado)
-        except:
+        buscado = db.recipes.find_one({'_id': ObjectId(id)})
+        if buscado:
+            resJson = dumps(buscado)
+            return Response(resJson, mimetype='application/json')
+        else:
             return jsonify({'error': 'Not found'}), 404
+
+    if request.method == 'PUT':
+        json = request.json
+        db.recipes.update_one({'_id': ObjectId(id)}, {'$set': json})
+        json['_id'] = id
+        resJson = dumps(json)
+        return Response(resJson, mimetype="application/json"), 202
+
+    if request.method == 'DELETE':
+        db.recipes.delete_one({'_id': ObjectId(id)})
+        return jsonify({'deleted_id': id}), 202

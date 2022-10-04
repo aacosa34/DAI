@@ -1,0 +1,20 @@
+PUT http://localhost:5000/api1/recipes/633bf39540c8587fc594635d
+Content-Type:application/json
+
+{
+  "name": "Glass of Water",
+  "instructions": [
+    "Grab a Jar of water.",
+    "Serve in a glass."
+  ],
+  "ingredients": [
+    {
+      "name": "Water",
+      "quantity": {
+        "quantity": "1",
+        "unit": "Jar"
+      }
+    }
+  ],
+  "slug": "glass-of-water"
+}
