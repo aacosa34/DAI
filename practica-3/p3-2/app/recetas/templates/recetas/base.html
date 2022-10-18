@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <header class="fixed top-0 left-0 right-0 bg-slate-800 text-slate-200 flex flex-row justify-between items-center">
+        <div class="flex items-center">
+            <a class="text-4xl p-4 cursor-pointer">Recetas</a>
+            <button class="bg-cyan-500 hover:bg-cyan-600 rounded-lg px-4 py-2">Alternar modo oscuro</button>
+        </div>
+        <form class="px-4 m-4" role="search">
+            <input class="rounded-lg px-4 py-2 mx-4" type="search" name="busqueda" id="busqueda" placeholder="Buscar recetas">
+            <button class="bg-emerald-500 hover:bg-emerald-600 rounded-lg px-4 py-2">Buscar</button>
+        </form>
+    </header>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
