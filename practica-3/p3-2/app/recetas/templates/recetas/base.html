@@ -10,18 +10,23 @@
 <body class="dark:bg-slate-800">
     <header class="fixed top-0 left-0 right-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-white flex flex-row justify-between items-center shadow-lg">
         <div class="flex items-center">
-            <a class="text-4xl p-4 cursor-pointer">Recetas</a>
-            <button disabled class="bg-cyan-500 enabled:hover:bg-cyan-600 disabled:opacity-50 rounded-lg px-4 py-2">Modo claro</button>
-            <button class="bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg px-4 py-2 disabled:opacity-50 ml-2">Modo oscuro</button>
+            <a href="/" class="text-4xl p-4 cursor-pointer">Recetas</a>
+            {% if oscuro == 'dark' %}
+                <a href="/?oscuro=" class="bg-sky-500 hover:bg-sky-600 rounded-lg px-4 py-2">Modo claro</a>
+            {% else %}
+                <a href="/?oscuro=dark" class="bg-slate-700 hover:bg-slate-800 text-slate-300 rounded-lg px-4 py-2">Modo oscuro</a>
+            {% endif %}
+            
         </div>
-        <form class="px-4 m-4" role="search">
-            <input class="rounded-lg border-solid border-2 border-sky-400 dark:bg-slate-800 px-4 py-2 mx-4" type="search" name="busqueda" id="busqueda" placeholder="Buscar recetas">
-            <button class="bg-emerald-500 hover:bg-emerald-600 rounded-lg px-4 py-2">Buscar</button>
+        <form method="GET" class="px-4 m-4" role="search">
+            <input class="rounded-lg border-solid border-2 border-slate-400 dark:bg-slate-800 px-2 py-2 mx-2" type="search" name="busqueda" id="busqueda" placeholder="Buscar recetas">
+            <button class="bg-sky-500 hover:bg-sky-600 rounded-lg px-4 py-2">Buscar</button>
         </form>
     </header>
-
     {% block content %}
+        
     {% endblock %}
+        
 
     <script>
         tailwind.config = {

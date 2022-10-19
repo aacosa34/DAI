@@ -1,21 +1,24 @@
 {% extends 'recetas/base.html' %}
 
 {% block content %}
-    <table class="table-auto">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Descripción</th>
-                <th>Más información</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for receta in recetas %}
-            <tr>
-                <td>{{ receta.nombre|title }}</td>
-                <td>{{ receta.preparacion }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="flex items-center justify-center h-screen">
+        <table class="table-fixed justify-center border-collapse border border-slate-500 dark:text-white">
+            <thead>
+                <tr>
+                    <th class="border border-slate-600 dark:bg-slate-700 bg-slate-300">Nombre</th>
+                    <th class="border border-slate-600 dark:bg-slate-700 bg-slate-300">Descripción</th>
+                    <th class="border border-slate-600 dark:bg-slate-700 bg-slate-300">Más información</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for receta in recetas %}
+                    <tr>
+                        <td class="border border-slate-700 dark:bg-slate-800 bg-slate-200">{{ receta.nombre }}</td>
+                        <td class="border border-slate-700 dark:bg-slate-800 bg-slate-200"><pre>{{ receta.perparación }}</pre></td>
+                        <td class="border border-slate-700 dark:bg-slate-800 bg-slate-200"><a href="">Ver más</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
