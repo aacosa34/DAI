@@ -1,7 +1,21 @@
-{% extends 'blog/base.html' %}
+{% extends 'recetas/base.html' %}
 
 {% block content %}
-    {% for receta in recetas %}
-    
-    {% endfor %}
+    <table class="table-auto">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Más información</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for receta in recetas %}
+            <tr>
+                <td>{{ receta.nombre|title }}</td>
+                <td>{{ receta.preparacion }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

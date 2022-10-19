@@ -3,4 +3,5 @@ from django.shortcuts import render
 # Create your views here.
 
 def index(request):
-    return render(request, 'recetas/base.html', {'titulo': 'Recetas'})
+    oscuro = ''
+    return render(request, 'recetas/lista_recetas.html', {'titulo': 'Recetas', 'recetas': '', 'oscuro': oscuro})

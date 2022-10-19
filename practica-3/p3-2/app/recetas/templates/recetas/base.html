@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="{{ oscuro }}">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,18 +7,26 @@
     <title>{{ titulo }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <header class="fixed top-0 left-0 right-0 bg-slate-800 text-slate-200 flex flex-row justify-between items-center">
+<body class="dark:bg-slate-800">
+    <header class="fixed top-0 left-0 right-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-white flex flex-row justify-between items-center shadow-lg">
         <div class="flex items-center">
             <a class="text-4xl p-4 cursor-pointer">Recetas</a>
-            <button class="bg-cyan-500 hover:bg-cyan-600 rounded-lg px-4 py-2">Alternar modo oscuro</button>
+            <button disabled class="bg-cyan-500 enabled:hover:bg-cyan-600 disabled:opacity-50 rounded-lg px-4 py-2">Modo claro</button>
+            <button class="bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg px-4 py-2 disabled:opacity-50 ml-2">Modo oscuro</button>
         </div>
         <form class="px-4 m-4" role="search">
-            <input class="rounded-lg px-4 py-2 mx-4" type="search" name="busqueda" id="busqueda" placeholder="Buscar recetas">
+            <input class="rounded-lg border-solid border-2 border-sky-400 dark:bg-slate-800 px-4 py-2 mx-4" type="search" name="busqueda" id="busqueda" placeholder="Buscar recetas">
             <button class="bg-emerald-500 hover:bg-emerald-600 rounded-lg px-4 py-2">Buscar</button>
         </form>
     </header>
+
     {% block content %}
     {% endblock %}
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
 </body>
 </html>
