@@ -9,6 +9,7 @@ class Image(models.Model):
 
 class Receta(models.Model):
   nombre = models.CharField(max_length=200)
+  descripcion = models.CharField(max_length=500)
   preparación = models.TextField(max_length=5000)
 
   def __str__(self):

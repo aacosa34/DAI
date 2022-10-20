@@ -4,16 +4,14 @@ from recetas.models import Receta
 # Create your views here.
 
 def index(request):
-    if request.method == 'GET':
-        oscuro = request.GET.get('oscuro')
-    else:
-        oscuro = ''
-    return render(request, 'recetas/base.html', {'titulo': 'Recetas', 'oscuro': oscuro})
+    request.session['theme'] = 'dark'
 
-def vista_tablas(request):
-    if request.method == 'GET':
-        oscuro = request.GET.get('oscuro')
+    return render(request, 'recetas/base.html', {'titulo': 'Recetas'})
+
+def busqueda(request):
+    if request.method == 'GET' and 'busqueda' in request.GET:
+        recetas = Receta.objects.filter(nombre__startswith=request.GET['busqueda']).values()
     else:
-        oscuro = ''
-    recetas = Receta.objects.all()
-    return render(request, 'recetas/lista_recetas.html', {'titulo': 'Recetas', 'recetas': recetas, 'oscuro': oscuro})
+        recetas = {}
+
+    return render(request, 'recetas/lista_recetas.html', {'titulo': 'Recetas', 'recetas': recetas})
