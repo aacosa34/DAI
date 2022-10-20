@@ -12,7 +12,7 @@ def index(request):
     else:
         request.session['theme'] = 'light'
 
-    return render(request, 'recetas/base.html', {'titulo': 'Recetas', 'theme': theme})
+    return render(request, 'recetas/index.html', {'titulo': 'Recetas', 'theme': theme})
 
 def busqueda(request):
     if request.method == 'POST':

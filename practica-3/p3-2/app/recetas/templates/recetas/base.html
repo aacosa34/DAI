@@ -7,14 +7,14 @@
     <title>{{ titulo }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="dark:bg-slate-900">
+<body class="dark:bg-slate-900 dark:text-white font-sans">
     <header class="fixed top-0 left-0 right-0 bg-white dark:bg-slate-800 text-slate-800 dark:text-white flex flex-row justify-between items-center shadow-xl">
-        <div class="flex items-center">
+        <div class="flex items-center max-w-xl">
             <a href="/" class="text-4xl p-4 cursor-pointer">Recetas</a>
             <form method="POST">
                 {% csrf_token %}
                 {% if theme == 'dark' %}
-                    <button name="theme" value="light" class="bg-sky-500 hover:bg-sky-600 rounded-lg px-4 py-2">Modo claro</button>
+                    <button name="theme" value="light" class="bg-sky-500 hover:bg-sky-600 text-white dark:text-slate-800 rounded-lg px-4 py-2">Modo claro</button>
                 {% else %}
                     <button name="theme" value="dark" class="bg-slate-700 hover:bg-slate-800 text-slate-300 rounded-lg px-4 py-2">Modo oscuro</button>
                 {% endif %}
@@ -22,7 +22,7 @@
         </div>
         <form action="buscar" method="GET" class="px-4 m-4" role="search">
             <input class="rounded-lg border-solid border-2 border-slate-400 dark:bg-slate-800 px-2 py-2 mx-2" type="search" name="busqueda" id="busqueda" placeholder="Buscar recetas">
-            <button class="bg-sky-500 hover:bg-sky-600 rounded-lg px-4 py-2">Buscar</button>
+            <button class="bg-sky-400 hover:bg-sky-500 text-white dark:text-slate-800 rounded-lg px-4 py-2">Buscar</button>
         </form>
     </header>
     {% block content %}
