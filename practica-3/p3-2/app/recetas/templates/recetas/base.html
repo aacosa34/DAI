@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="{{ request.session.theme }}">
+<html lang="en" class="{{ theme }}">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,15 +7,16 @@
     <title>{{ titulo }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="dark:bg-slate-800">
-    <header class="fixed top-0 left-0 right-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-white flex flex-row justify-between items-center shadow-lg">
+<body class="dark:bg-slate-900">
+    <header class="fixed top-0 left-0 right-0 bg-white dark:bg-slate-800 text-slate-800 dark:text-white flex flex-row justify-between items-center shadow-xl">
         <div class="flex items-center">
             <a href="/" class="text-4xl p-4 cursor-pointer">Recetas</a>
-            <form method="GET">
-                {% if request.session.theme == 'dark' %}
-                    <button name="theme" value="clear" class="bg-sky-500 hover:bg-sky-600 rounded-lg px-4 py-2">Modo claro</a>
+            <form method="POST">
+                {% csrf_token %}
+                {% if theme == 'dark' %}
+                    <button name="theme" value="light" class="bg-sky-500 hover:bg-sky-600 rounded-lg px-4 py-2">Modo claro</button>
                 {% else %}
-                    <button name="theme" value="dark" class="bg-slate-700 hover:bg-slate-800 text-slate-300 rounded-lg px-4 py-2">Modo oscuro</a>
+                    <button name="theme" value="dark" class="bg-slate-700 hover:bg-slate-800 text-slate-300 rounded-lg px-4 py-2">Modo oscuro</button>
                 {% endif %}
             </form>    
         </div>
