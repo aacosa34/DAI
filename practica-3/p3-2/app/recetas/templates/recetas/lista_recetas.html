@@ -1,7 +1,7 @@
 {% extends 'recetas/base.html' %}
 
 {% block content %}
-    <div class="flex items-center justify-center h-screen">
+    
         <table class="table-auto text-center justify-center shadow-xl w-9/12 overflow-auto dark:text-white">
             <thead>
                 <tr>
@@ -15,10 +15,10 @@
                     <tr class="odd:bg-sky-100 bg-sky-50 dark:odd:bg-slate-800 dark:bg-slate-700">
                         <td class="py-4 px-10">{{ receta.nombre }}</td>
                         <td class="py-4 px-10">{{ receta.descripcion }}</td>
-                        <td class="py-4 px-10"><a href="">Ver más</a></td>
+                        <td class="py-4 px-10"><a href="receta/{{ receta.id }}">Ver más</a></td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
-    </div>
+
 {% endblock %}

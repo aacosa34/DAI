@@ -18,18 +18,17 @@
                 {% else %}
                     <button name="theme" value="dark" class="bg-slate-700 hover:bg-slate-800 text-slate-300 rounded-lg px-4 py-2">Modo oscuro</button>
                 {% endif %}
-            </form>    
+            </form>
         </div>
         <form action="buscar" method="GET" class="px-4 m-4" role="search">
             <input class="rounded-lg border-solid border-2 border-slate-400 dark:bg-slate-800 px-2 py-2 mx-2" type="search" name="busqueda" id="busqueda" placeholder="Buscar recetas">
             <button class="bg-sky-400 hover:bg-sky-500 text-white dark:text-slate-800 rounded-lg px-4 py-2">Buscar</button>
         </form>
     </header>
-    {% block content %}
-        
-    {% endblock %}
-        
-
+    <div class="flex items-center justify-center h-screen">
+        {% block content %}
+        {% endblock %}
+    </div>
     <script>
         tailwind.config = {
             darkMode: 'class'
