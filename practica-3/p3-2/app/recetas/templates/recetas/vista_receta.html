@@ -1,16 +1,18 @@
 {% extends 'recetas/base.html' %}
 
 {% block content %}
-    <div>
-        <img src="{{ image.imagen }}" alt="macarrones">
-        <div>
-            <h1>{{ receta.nombre }}</h1>
-            <p>{{ receta.descripcion }}</p>
+<div class="w-4/5 overflow-hidden">
+    <div class="flex flex-row justify-between items-center ">
+        <img class="w-1/2 h-1/2" src="/{{ receta.foto }}" alt="macarrones">
+        <div class="text-center basis-2/3">
+            <h1 class="text-4xl font-bold py-4">{{ receta.nombre }}</h1>
+            <h3 class="text-xl">{{ receta.descripcion }}</h3>
         </div>
+    </div>
 
-        <h2>Preparación</h2>
+    <div class="flex flex-col p-10"> 
+        <h2 class="text-xl font-bold">Preparación</h2>
         <p>{{ receta.preparación }}</p>
     </div>
-    
-        
+</div>
 {% endblock %}

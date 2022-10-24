@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from recetas.models import Receta, Image
+from recetas.models import Receta
 
 # Create your views here.
 
@@ -7,12 +7,10 @@ def index(request):
     if request.method == 'POST':
         request.session['theme'] = request.POST['theme']
     
-    if 'theme' in request.session:
-        theme = request.session['theme']
-    else:
+    if 'theme' not in request.session:
         request.session['theme'] = 'light'
 
-    return render(request, 'recetas/index.html', {'titulo': 'Recetas', 'theme': theme})
+    return render(request, 'recetas/index.html', {'titulo': 'Recetas', 'theme': request.session['theme']})
 
 def busqueda(request):
     if request.method == 'POST':
@@ -39,7 +37,6 @@ def receta(request, id):
     else:
         request.session['theme'] = 'light'
 
-    receta = Receta.objects.get(id=id)
-    imagen = Image.objects.filter(receta=receta)
-    
-    return render(request, 'recetas/vista_receta.html', {'titulo': 'Recetas', 'receta': receta, 'image': imagen, 'theme': theme})
+    receta = Receta.objects.get(id=id)    
+
+    return render(request, 'recetas/vista_receta.html', {'titulo': 'Recetas', 'receta': receta, 'theme': theme})

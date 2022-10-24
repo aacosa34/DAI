@@ -2,20 +2,18 @@
 
 {% block content %}
     
-        <table class="table-auto text-center justify-center shadow-xl w-9/12 overflow-auto dark:text-white">
+        <table class="table-auto text-center justify-center shadow-xl w-9/12 border border-collapse border-sky-600 overflow-auto dark:text-white">
             <thead>
                 <tr>
-                    <th class="dark:bg-slate-600 bg-sky-300 py-3 px-10">Nombre</th>
-                    <th class="dark:bg-slate-600 bg-sky-300 py-3 px-10">Descripción</th>
-                    <th class="dark:bg-slate-600 bg-sky-300 py-3 px-10">Más información</th>
+                    <th class="dark:bg-slate-600 bg-sky-300 border border-sky-600 py-3 px-10">Nombre</th>
+                    <th class="dark:bg-slate-600 bg-sky-300 border border-sky-600 py-3 px-10">Más información</th>
                 </tr>
             </thead>
             <tbody>
                 {% for receta in recetas %}
                     <tr class="odd:bg-sky-100 bg-sky-50 dark:odd:bg-slate-800 dark:bg-slate-700">
-                        <td class="py-4 px-10">{{ receta.nombre }}</td>
-                        <td class="py-4 px-10">{{ receta.descripcion }}</td>
-                        <td class="py-4 px-10"><a href="receta/{{ receta.id }}">Ver más</a></td>
+                        <td class="border border-sky-600 py-4 px-10">{{ receta.nombre }}</td>
+                        <td class="border border-sky-600 py-4 px-10"><a class="hover:text-slate-600" href="receta/{{ receta.id }}">Ver receta</a></td>
                     </tr>
                 {% endfor %}
             </tbody>
