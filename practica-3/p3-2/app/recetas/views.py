@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from recetas.models import Receta
+from recetas.models import Ingrediente, Receta
 
 # Create your views here.
 
@@ -38,5 +38,6 @@ def receta(request, id):
         request.session['theme'] = 'light'
 
     receta = Receta.objects.get(id=id)    
+    ingredientes = Ingrediente.objects.filter(receta=receta).values()
 
-    return render(request, 'recetas/vista_receta.html', {'titulo': 'Recetas', 'receta': receta, 'theme': theme})
+    return render(request, 'recetas/vista_receta.html', {'titulo': 'Recetas', 'receta': receta, 'ingredientes': ingredientes, 'theme': theme})

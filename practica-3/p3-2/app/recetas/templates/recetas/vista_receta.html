@@ -1,18 +1,27 @@
 {% extends 'recetas/base.html' %}
 
 {% block content %}
-<div class="w-4/5 overflow-hidden">
-    <div class="flex flex-row justify-between items-center ">
-        <img class="w-1/2 h-1/2" src="/{{ receta.foto }}" alt="macarrones">
+<div class="w-4/5 overflow-hidden bg-sky-100 dark:bg-slate-700 rounded-2xl shadow-xl p-10">
+    <div class="flex md:flex-row flex-col justify-between items-center">
+        <img class="md:max-w-sm max-w-xs md:max-h-sm max-h-xs border border-4 rounded-lg" src="/media/{{ receta.foto }}" alt="macarrones">
         <div class="text-center basis-2/3">
-            <h1 class="text-4xl font-bold py-4">{{ receta.nombre }}</h1>
-            <h3 class="text-xl">{{ receta.descripcion }}</h3>
+            <h1 class="text-4xl font-bold p-4">{{ receta.nombre }}</h1>
         </div>
     </div>
 
-    <div class="flex flex-col p-10"> 
-        <h2 class="text-xl font-bold">Preparación</h2>
-        <p>{{ receta.preparación }}</p>
+    <hr class="mt-10">
+    <div class="py-4">
+        <h2 class="text-xl font-bold mb-2">Ingredientes</h2>
+        <ul class="list-disc list-inside">
+            {% for ingrediente in ingredientes %}
+                <li>{{ ingrediente.cantidad }} {{ingrediente.unidades|lower}} de {{ ingrediente.nombre|title }}</li>
+            {% endfor %}  
+        </ul>      
+    </div>
+
+    <div class="flex flex-col"> 
+        <h2 class="text-xl font-bold mb-2">Preparación</h2>
+        <p>{{ receta.preparacion }}</p>
     </div>
 </div>
 {% endblock %}

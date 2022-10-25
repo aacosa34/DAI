@@ -9,7 +9,7 @@
 </head>
 <body class="dark:bg-slate-900 dark:text-white">
     <header>
-        <nav class="flex items-center lg:justify-between justify-center flex-wrap bg-white dark:bg-slate-800 shadow-lg p-6">
+        <nav class="flex fixed top-0 right-0 left-0 items-center lg:justify-between justify-center flex-wrap bg-white dark:bg-slate-800 shadow-lg p-6">
             <div class="flex items-center flex-shrink-0 text-sky-600 dark:text-slate-200 mr-6">
                 <a href="/" class="font-semibold text-3xl tracking-tight">Recetas</a>
                 <form class="ml-3" method="POST">
@@ -25,7 +25,7 @@
             </div>
             <div class="w-full block sm:pt-0 pt-4 grow sm:flex sm:items-center sm:w-auto">
                 <div class="text-sm sm:grow text-center sm:text-right">
-                    <form action="buscar" method="get">
+                    <form action="/buscar" method="get">
                         <input class="rounded-lg border-solid border-2 border-slate-400 dark:bg-slate-800 px-2 py-2 mx-2" type="search" name="busqueda" id="busqueda" placeholder="Buscar recetas">
                         <button class="bg-sky-400 hover:bg-sky-500 text-white dark:text-slate-800 rounded-lg px-4 py-2">Buscar</button>
                     </form>
@@ -33,7 +33,7 @@
             </div>
         </nav>
     </header>
-    <div class="flex items-center justify-center h-screen">
+    <div class="flex items-center justify-center h-screen md:my-24 sm:my-48 my-80">
         {% block content %}
         {% endblock %}
     </div>
