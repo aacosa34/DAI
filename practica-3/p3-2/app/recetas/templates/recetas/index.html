@@ -1,14 +1,34 @@
 {% extends 'recetas/base.html' %}
 
 {% block content %}
-        <div class="flex flex-col items-center bg-gradient-to-r from-sky-100 dark:from-slate-700 to-sky-200 dark:to-slate-800 text-center rounded-3xl max-w-xl w-9/12 max-h-xl h-9/12 shadow-xl p-10">
-            <h1 class="text-4xl font-bold mx-auto">Bienvenid@</h1>
-            <h3 class="text-3xl font-semibold mb-2">Base de datos de recetas</h3>
-            <p class="text-2xl my-2">Aquí podrás encontrar recetas de todo tipo.</p>
-            <p class="text-xl my-2">Puedes buscar recetas por nombre:</p>
-            <form action="buscar" method="get">
-                <input class="rounded-lg border-solid border-2 border-slate-400 dark:bg-slate-800 px-2 py-2 mx-2" type="search" name="busqueda" id="busqueda" placeholder="Buscar recetas">
-                <button class="bg-sky-400 hover:bg-sky-500 text-white dark:text-slate-800 rounded-lg px-4 py-2">Buscar</button>
-            </form>
+    <div>
+        <h1 class="font-bold text-3xl text-center my-4">{{ mensaje }}</h1>
+        <div class="overflow-x-auto relative shadow-xl sm:rounded-lg">
+            <table class="w-full text-xl text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="py-3 px-6">
+                            Nombre
+                        </th>
+                        <th scope="col" class="py-3 px-6">
+                            Enlace a la receta
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for receta in recetas %}
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{ receta.nombre }}
+                        </th>
+                        <td class="py-4 px-6 text-right">
+                            <a href="receta/{{ receta.id }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Ver receta</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
+    </div>
+
 {% endblock %}

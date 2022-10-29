@@ -1,27 +1,23 @@
 {% extends 'recetas/base.html' %}
 
 {% block content %}
-<div class="w-4/5 overflow-hidden bg-sky-100 dark:bg-slate-700 rounded-2xl shadow-xl p-10">
-    <div class="flex md:flex-row flex-col justify-between items-center">
-        <img class="md:max-w-sm max-w-xs md:max-h-sm max-h-xs border border-4 rounded-lg" src="/media/{{ receta.foto }}" alt="macarrones">
-        <div class="text-center basis-2/3">
-            <h1 class="text-4xl font-bold p-4">{{ receta.nombre }}</h1>
-        </div>
-    </div>
 
-    <hr class="mt-10">
-    <div class="py-4">
-        <h2 class="text-xl font-bold mb-2">Ingredientes</h2>
-        <ul class="list-disc list-inside">
+<div class="flex flex-col items-center bg-white rounded-lg border shadow-md md:m-0 my-auto md:flex-row md:max-w-screen-xl dark:border-gray-700 dark:bg-gray-800">
+    <img class="object-cover w-full h-96 rounded-t-lg md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
+        src="/media/{{ receta.foto }}" alt="{{ receta.nombre }}">
+    <div class="flex flex-col justify-between p-4 leading-normal">
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ receta.nombre }}</h5>
+        <hr>
+        <h6 class="mt-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Ingredientes</h6>
+        <ul>
             {% for ingrediente in ingredientes %}
-                <li>{{ ingrediente.cantidad }} {{ingrediente.unidades|lower}} de {{ ingrediente.nombre|title }}</li>
-            {% endfor %}  
-        </ul>      
-    </div>
-
-    <div class="flex flex-col"> 
-        <h2 class="text-xl font-bold mb-2">Preparación</h2>
-        <p>{{ receta.preparacion|linebreaksbr }}</p>
+                <li class="my-2 font-normal text-gray-700 dark:text-gray-400">{{ ingrediente.cantidad }} {{ ingrediente.unidades }} de {{ ingrediente.nombre }}</li>
+            {% endfor %}
+        </ul>
+        <hr>
+        <h6 class="mt-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Preparación</h6>
+        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ receta.preparacion|linebreaksbr }}</p>
     </div>
 </div>
+
 {% endblock %}

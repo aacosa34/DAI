@@ -10,23 +10,17 @@ def index(request):
     if 'theme' not in request.session:
         request.session['theme'] = 'light'
 
-    return render(request, 'recetas/index.html', {'titulo': 'Recetas', 'theme': request.session['theme']})
 
-def busqueda(request):
-    if request.method == 'POST':
-        request.session['theme'] = request.POST['theme']
-
-    if 'theme' in request.session:
-        theme = request.session['theme']
-    else:
-        request.session['theme'] = 'light'
-
+    # Si todavía no se ha buscado nada, se muestran todas
+    recetas = Receta.objects.all().values()
+    mensaje = 'Todas las recetas'
+    # Si se ha buscado y se encuentra algo, se muestran las recetas que coincidan
     if request.method == 'GET' or 'busqueda' in request.GET:
-        recetas = Receta.objects.filter(nombre__startswith=request.GET['busqueda']).values()
-    else:
-        recetas = {}
+        mensaje = f"Recetas que contienen '{request.GET['busqueda']}'"
+        recetas = Receta.objects.filter(
+            nombre__startswith=request.GET['busqueda']).values()
 
-    return render(request, 'recetas/lista_recetas.html', {'titulo': 'Recetas', 'recetas': recetas, 'theme': theme})
+    return render(request, 'recetas/index.html', {'titulo': 'Recetas', 'theme': request.session['theme'], 'recetas': recetas, 'mensaje': mensaje})
 
 def receta(request, id):
     if request.method == 'POST':
