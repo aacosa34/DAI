@@ -15,7 +15,7 @@ def index(request):
     recetas = Receta.objects.all().values()
     mensaje = 'Todas las recetas'
     # Si se ha buscado y se encuentra algo, se muestran las recetas que coincidan
-    if request.method == 'GET' or 'busqueda' in request.GET:
+    if 'busqueda' in request.GET:
         mensaje = f"Recetas que contienen '{request.GET['busqueda']}'"
         recetas = Receta.objects.filter(
             nombre__startswith=request.GET['busqueda']).values()
