@@ -39,10 +39,10 @@ def receta(request, id):
 
 def nueva_receta(request):
     if request.method == 'POST':
-        form = RecetaForm(request.POST)
+        form = RecetaForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('receta', id=Receta.objects.latest('id').id)
+            receta = form.save()
+            return redirect('vista_receta', id=receta.pk)
 
         if 'theme' in request.POST:
             request.session['theme'] = request.POST['theme']
