@@ -1,7 +1,7 @@
 {% extends 'recetas/base.html' %}
 
 {% block content %}
-    <div class="p-4 w-full max-w-xl bg-white rounded-lg border border-gray-200 shadow-md sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+    <div class="p-4 w-full max-w-4xl bg-white rounded-lg border border-gray-200 shadow-md sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
         <form method="post" enctype="multipart/form-data">
             <h5 class="text-xl font-medium text-gray-900 dark:text-white mb-4">Añadir una nueva receta</h5>
             {% csrf_token %}
