@@ -37,33 +37,32 @@ def receta(request, id):
     return render(request, 'recetas/vista_receta.html', {'titulo': receta.nombre, 'receta': receta, 'ingredientes': ingredientes, 'theme': check_theme(request)})
 
 def nueva_receta(request):
+    form = RecetaForm()
     if request.method == 'POST':
-        form = RecetaForm(request.POST, request.FILES)
-        if form.is_valid():
-            receta = form.save()
-            return redirect('vista_receta', id=receta.pk)
-
         if 'theme' in request.POST:
             request.session['theme'] = request.POST['theme']
-    else:
-        form = RecetaForm()    
+    
+        else:
+            form = RecetaForm(request.POST, request.FILES)
+            if form.is_valid():
+                receta = form.save()
+                return redirect('vista_receta', id=receta.pk)
 
-    return render(request, 'recetas/nueva_receta.html', {'titulo': 'Añadir receta', 'form': form,'theme': check_theme(request)})
+    return render(request, 'recetas/nueva_receta.html', {'titulo': 'Añadir receta', 'form': form, 'theme': check_theme(request)})
 
 def editar_receta(request, id):
     receta = Receta.objects.get(id=id)
+    form = RecetaForm(instance=receta)
     if request.method == 'POST':
         if 'theme' in request.POST:
             request.session['theme'] = request.POST['theme']
         
-        form = RecetaForm(request.POST, request.FILES, instance=receta)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Receta editada correctamente')
-            return redirect('vista_receta', id=id)
-
-    else:
-        form = RecetaForm(instance=receta)
+        else:
+            form = RecetaForm(request.POST, request.FILES, instance=receta)
+            if form.is_valid() and form.has_changed():
+                form.save()
+                messages.success(request, 'Receta editada correctamente')
+                return redirect('vista_receta', id=id)
     
     return render(request, 'recetas/editar_receta.html', {'titulo': 'Editar receta', 'form': form, 'receta': receta, 'theme': check_theme(request)})
             
