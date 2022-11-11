@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from recetas.forms import RecetaForm
+from recetas.forms import RecetaForm, CreateUserForm, LoginUserForm
 from recetas.models import Ingrediente, Receta
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
 
 def index(request):
     if request.method == 'POST':
@@ -50,6 +51,7 @@ def nueva_receta(request):
 
     return render(request, 'recetas/nueva_receta.html', {'titulo': 'Añadir receta', 'form': form, 'theme': check_theme(request)})
 
+@login_required
 def editar_receta(request, id):
     receta = Receta.objects.get(id=id)
     form = RecetaForm(instance=receta)
@@ -67,8 +69,48 @@ def editar_receta(request, id):
     return render(request, 'recetas/editar_receta.html', {'titulo': 'Editar receta', 'form': form, 'receta': receta, 'theme': check_theme(request)})
             
 
+def registerPage(request):
+    form = CreateUserForm()
+
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Se ha registrado correctamente')
+            return redirect('login')
 
 
+    return render(request, 'accounts/register.html',
+    {
+        'titulo': 'Registrarse',
+        'form': form,
+    })
+
+def loginPage(request):
+    form = LoginUserForm()
+    if request.method == 'POST':
+        usern = request.POST['username']
+        passw = request.POST['password']
+
+        user = authenticate(request, username=usern, password=passw)
+
+        if user is not None:
+            login(request, user)
+            return redirect('')
+        else:
+            form = LoginUserForm(request.POST)
+            messages.info(request, 'Nombre de usuario o contraseña incorrecto')
+            return render(request, 'accounts/login.html', {'titulo':'Iniciar sesión', 'form':form})
+
+    return render(request, 'accounts/login.html',
+    {
+        'titulo': 'Iniciar sesión',
+        'form':form
+    })
+
+def logoutUser(request):
+    logout(request)
+    return redirect('')
 
 # Funcion auxiliar que comprueba el tema actual
 def check_theme(request):

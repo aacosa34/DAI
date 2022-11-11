@@ -1,6 +1,7 @@
 from django import forms
 from .models import Receta
-
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 class RecetaForm(forms.ModelForm):
     error_css_class = 'text-red-600'
@@ -33,3 +34,18 @@ class RecetaForm(forms.ModelForm):
 
         if not foto:
             self.add_error('foto', 'La foto es obligatoria')
+
+
+class CreateUserForm(UserCreationForm):
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
+
+class LoginUserForm(forms.ModelForm):
+    error_css_class = 'text-red-600'
+
+    class Meta:
+        model = User
+        fields = ['username', 'password']
