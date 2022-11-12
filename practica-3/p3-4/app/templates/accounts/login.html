@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
+{% load tailwind_filters %}
 {% load crispy_forms_tags %}
 
 {% block title %}Iniciar sesión{% endblock %}
 
 {% block content %}
-<div class="p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-    <h1 class="text-4xl font-extrabold dark:text-white">Iniciar sesión</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{form|crispy}}
-        <p>¿No tienes cuenta? <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="/sign-up">Regístrate aquí.</a></p>
-        <button class="text-gray-900 bg-gradient-to-r from-teal-200 to-lime-200 hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200 focus:ring-4 focus:outline-none focus:ring-lime-200 dark:focus:ring-teal-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Iniciar sesión</button>
-    </form>
-</div>
+    <div class="p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+        <h1 class="text-4xl font-extrabold dark:text-white">Iniciar sesión</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{form|crispy}}
+            <p>¿No tienes cuenta? <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="/register">Regístrate aquí.</a></p>
+            <button class="text-gray-900 bg-gradient-to-r from-teal-200 to-lime-200 hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200 focus:ring-4 focus:outline-none focus:ring-lime-200 dark:focus:ring-teal-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Iniciar sesión</button>
+        </form>
+    </div>
 {% endblock %}

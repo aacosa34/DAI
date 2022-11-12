@@ -11,11 +11,13 @@ def index(request):
         if 'theme' in request.POST:
             request.session['theme'] = request.POST['theme']
 
-        if 'borrarReceta' in request.POST:
+        if 'borrarReceta' in request.POST and request.user.is_authenticated:
             receta = Receta.objects.get(id=request.POST['borrarReceta'])
             receta.delete()
             messages.success(request, 'Receta borrada correctamente')
             return redirect('index')
+        else:
+            messages.error(request, 'No se ha podido borrar la receta: no estás registrado')
 
     # Si todavía no se ha buscado nada, se muestran todas
     recetas = Receta.objects.all().values()
@@ -26,7 +28,7 @@ def index(request):
         recetas = Receta.objects.filter(
             nombre__startswith=request.GET['busqueda']).values()
 
-    return render(request, 'recetas/index.html', {'titulo': 'Recetas', 'theme': check_theme(request), 'recetas': recetas, 'cabecera': cabecera})
+    return render(request, 'recetas/index.html', {'titulo': 'Recetas', 'theme': check_theme(request), 'recetas': recetas, 'cabecera': cabecera, 'user': request.user})
 
 def receta(request, id):
     if request.method == 'POST':
@@ -37,6 +39,7 @@ def receta(request, id):
 
     return render(request, 'recetas/vista_receta.html', {'titulo': receta.nombre, 'receta': receta, 'ingredientes': ingredientes, 'theme': check_theme(request)})
 
+@login_required
 def nueva_receta(request):
     form = RecetaForm()
     if request.method == 'POST':
@@ -73,44 +76,53 @@ def registerPage(request):
     form = CreateUserForm()
 
     if request.method == 'POST':
-        form = CreateUserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Se ha registrado correctamente')
-            return redirect('login')
+        if 'theme' in request.POST:
+            request.session['theme'] = request.POST['theme']
+        else:
+            form = CreateUserForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Se ha registrado correctamente')
+                return redirect('login')
 
 
     return render(request, 'accounts/register.html',
     {
         'titulo': 'Registrarse',
         'form': form,
+        'theme': check_theme(request),
     })
 
 def loginPage(request):
     form = LoginUserForm()
     if request.method == 'POST':
-        usern = request.POST['username']
-        passw = request.POST['password']
+        if 'theme' in request.POST:
+            request.session['theme'] = request.POST['theme']
 
-        user = authenticate(request, username=usern, password=passw)
-
-        if user is not None:
-            login(request, user)
-            return redirect('')
         else:
-            form = LoginUserForm(request.POST)
-            messages.info(request, 'Nombre de usuario o contraseña incorrecto')
-            return render(request, 'accounts/login.html', {'titulo':'Iniciar sesión', 'form':form})
+            usern = request.POST['username']
+            passw = request.POST['password']
+
+            user = authenticate(request, username=usern, password=passw)
+
+            if user is not None:
+                login(request, user)
+                return redirect('index')
+            else:
+                form = LoginUserForm(request.POST)
+                messages.info(request, 'Nombre de usuario o contraseña incorrecto')
+                return render(request, 'accounts/login.html', {'titulo':'Iniciar sesión', 'form':form, 'theme':check_theme(request)})
 
     return render(request, 'accounts/login.html',
     {
         'titulo': 'Iniciar sesión',
-        'form':form
+        'form':form,
+        'theme': check_theme(request),
     })
 
 def logoutUser(request):
     logout(request)
-    return redirect('')
+    return redirect('index')
 
 # Funcion auxiliar que comprueba el tema actual
 def check_theme(request):
