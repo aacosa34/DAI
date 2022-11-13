@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load tailwind_filters %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="p-4 w-full max-w-4xl bg-white rounded-lg border border-gray-200 shadow-md sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700 my-auto">
+    <form method="post" enctype="multipart/form-data">
+        <h5 class="text-xl font-medium text-gray-900 dark:text-white mb-4">Editar receta de {{ receta.nombre }}</h5>
+        <img src="/media/{{ receta.foto }}" alt="{{ receta.nombre }}" class="w-1/2">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button
+            class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-teal-300 to-lime-300 group-hover:from-teal-300 group-hover:to-lime-300 dark:text-white dark:hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-lime-200 dark:focus:ring-lime-800">
+            <span
+                class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                Guardar
+            </span>
+        </button>
+    </form>
+</div>
+{% endblock %}
