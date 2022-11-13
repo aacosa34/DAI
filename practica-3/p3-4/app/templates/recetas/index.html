@@ -41,9 +41,11 @@
                         <th scope="col" class="py-3 px-6">
                             Enlace a la receta
                         </th>
+                        {% if not user.is_superuser or not user.is_staff %}
                         <th>
                             Acciones
                         </th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -57,6 +59,7 @@
                         </td>
                         <td>
                             <div class="inline-flex mt-2 xs:mt-0">
+                                {% if user.is_staff or user.is_superuser %}
                                 <a href="/receta/edit/{{ receta.id }}"
                                     class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-xs font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
                                     <span
@@ -64,6 +67,8 @@
                                         Editar
                                     </span>
                                 </a>
+                                {% endif %}
+                                {% if user.is_superuser %}
                                 <button
                                     class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-xs font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800" data-modal-toggle="popup-modal-{{ receta.id }}">
                                     <span
@@ -71,6 +76,7 @@
                                         Borrar
                                     </span>
                                 </button>
+                            {% endif %}
                                 <div id="popup-modal-{{ receta.id }}" tabindex="-1"
                                     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal md:h-full">
                                     <div class="relative p-4 w-full max-w-md h-full md:h-auto">
@@ -115,6 +121,7 @@
                 </tbody>
             </table>
         </div>
+        {% if user.is_superuser %}
         <a href="receta/new"
             class="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-teal-300 to-lime-300 group-hover:from-teal-300 group-hover:to-lime-300 dark:text-white dark:hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-lime-200 dark:focus:ring-lime-800">
             <span
@@ -122,6 +129,7 @@
                 Añadir receta
             </span>
         </a>
+        {% endif %}
     </div>
 
 {% endblock %}
