@@ -4,17 +4,29 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cockteles</title>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">    <title>Cockteles</title>
 </head>
 <body>
-    <form>
-        <input type="search" name="busqueda" id="buscar">
-    </form>
+    <nav class="container">
+        <ul>
+            <li><strong>Cockteles</strong></li>
+        </ul>
+        <ul>
+            <li>
+                <a href="#" role="button" class="contrast" id="dark-toggle">Cambiar a modo oscuro</a>
+            </li>
+        </ul>
+    </nav>
+    <main class="container">
+        <div class="grid">
 
-    <div id="elemento_encima_de_la_tabla">
-
-    </div>
-    
+        </div>
+        <form>
+            <input type="search" name="busqueda" id="buscar">
+        </form>
+        
+        <div id="app"></div>
+    </main>
     <script src="{{url_for('static', filename='app.js')}}"></script>
 </body>
 </html>
