@@ -89,10 +89,9 @@ class Recipes(Resource):
     
 api.add_resource(Recipes, '/api/recipes', '/api/recipes/<string:id>')
 
-
 @app.route('/')
-def hello_world():
-    return render_template('index.html', script = 'index.js')
+def index():
+    return render_template('index.html')
 
 
 @app.errorhandler(404)

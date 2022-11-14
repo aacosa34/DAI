@@ -10,13 +10,6 @@ services:
     volumes:
       - ./app:/app
 
-  node:
-    build: .
-    ports:
-      - 3000:3000
-    volumes:
-      - ./app:/app
-
   mongo:
     image: mongo:latest
     restart: always
