@@ -1,49 +1,36 @@
-// para que se ejecute al cargar la página
-window.onload = () => {
+  const recetas = []    
+  let html_str=''
+  let i = 0
+  // fetch devuelve una promise
+  fetch('/api/recipes')           // GET por defecto, se ejecuta al cargar la página
+  .then(res => res.json())        // respuesta en json, otra promise
+  .then(filas => {               // arrow function
+      filas.recetas.forEach(fila => {     // bucle ES6, arrow function
+          i++
+          recetas.push(fila)      // se guardan para después sacar cada una             
+          // ES6 templates
+          html_str += `<tr>
+                         <td>${i}</td>
+                         <td>
+                            <button onclick="detalle('${i-1}')" 
+                                  type="button" class="btn btn-outline btn-sm"
+                                  data-bs-toggle="modal" data-bs-target="#detailModal">
+                            ${fila.name}
+                         </button>
+                  </td>
+                  <td>
+                  <button type="button" class="btn btn-warning btn-sm">Edit</button>
+                  <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                  </td>
+                  </tr>`         // ES6 templates
+      });
+      document.getElementById('tbody').innerHTML=html_str  // se pone el html en su sitio
+    })
 
-  const elemento_busqueda = document.getElementById('buscar')
-
-  // evento para cuando cambia el valor introducido en un <input id="buscar">
-  elemento_busqueda.onchange = () => {
-    const texto_busqueda = elemento_busqueda.value
-    console.log(texto_busqueda)
+  function detalle(i) {  // saca un modal con la información de cada coctel
+    // saca un modal con receta[i]
   }
-}
-const ele = document.querySelector("#app")
-
-fetch("/api/recipes")
-  .then((res) => res.json())
-  .then((recetas) => {
-    const htmlString = recetas.recetas.map(
-      (receta) => { 
-        return `
-          <tr>
-            <td>${receta.name}</td>
-            <td>${receta.ingredients.length}</td>
-            <td>${receta.instructions.join(', ')}</td>
-            <td>${receta.slug}</td>
-          </tr>
-        `
-      }
-    )
-
-    ele.innerHTML = `
-      <h1>Lista de ${recetas.len} recetas</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Num. ingredientes</th>
-            <th>Instrucciones</th>
-            <th>Slug</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${htmlString.join('')}
-        </tbody>
-      </table>`
-  })
+     
 
 const dark_toggle = document.querySelector("#dark-toggle")
 htmlTag = document.documentElement
@@ -57,4 +44,16 @@ dark_toggle.onclick = () => {
     htmlTag.setAttribute("data-theme", "dark")
     dark_toggle.innerHTML = `Cambiar a modo claro`
   }
+}
+
+const button_plus = document.querySelector("#size-plus")
+const button_minus = document.querySelector("#size-minus")
+
+button_plus.onclick = () => {
+  console.log("plus")
+  htmlTag.style.fontSize = "40px"
+}
+
+button_minus.onclick = () => {
+  htmlTag.style.fontSize = "20px"
 }
