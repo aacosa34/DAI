@@ -11,12 +11,12 @@ def index(request):
         if 'theme' in request.POST:
             request.session['theme'] = request.POST['theme']
 
-        if 'borrarReceta' in request.POST and request.user.is_authenticated:
+        if 'borrarReceta' in request.POST and request.user.is_superuser:
             receta = Receta.objects.get(id=request.POST['borrarReceta'])
             receta.delete()
             messages.success(request, 'Receta borrada correctamente')
             return redirect('index')
-        else:
+        elif 'borrarReceta' in request.POST and not request.user.is_superuser:
             messages.error(request, 'No se ha podido borrar la receta: no estás registrado')
 
     # Si todavía no se ha buscado nada, se muestran todas
@@ -69,7 +69,13 @@ def editar_receta(request, id):
                 messages.success(request, 'Receta editada correctamente')
                 return redirect('vista_receta', id=id)
     
-    return render(request, 'recetas/editar_receta.html', {'titulo': 'Editar receta', 'form': form, 'receta': receta, 'theme': check_theme(request)})
+    return render(request, 'recetas/editar_receta.html', 
+    {
+        'titulo': 'Editar receta', 
+        'form': form,
+        'receta': receta,
+        'theme': check_theme(request)
+    })
             
 
 def registerPage(request):
@@ -99,7 +105,7 @@ def loginPage(request):
         if 'theme' in request.POST:
             request.session['theme'] = request.POST['theme']
 
-        else:
+        elif not request.user.is_authenticated:
             usern = request.POST['username']
             passw = request.POST['password']
 
@@ -107,6 +113,7 @@ def loginPage(request):
 
             if user is not None:
                 login(request, user)
+                messages.info(request, 'Se ha logueado correctamente')
                 return redirect('index')
             else:
                 form = LoginUserForm(request.POST)
