@@ -97,7 +97,7 @@
     </nav>
     <main>
         <div class="flex flex-col items-center justify-center mt-10 overflow-x-auto relative">
-            <button type="button" class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Add recipe</button>
+            <button id="add-recipe" type="button" class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Add recipe</button>
             <table class="w-1/2 text-sm text-left text-gray-500 dark:text-gray-400 my-10 shadow-lg">
                 <thead class="text-xs text-center text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 rounded-lg dark:text-gray-400">
                     <tr>
@@ -139,7 +139,7 @@
         class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 p-4 w-full md:inset-0 h-modal md:h-full">
         <div class="relative w-full max-w-2xl h-full md:h-auto">
             <!-- Modal content -->
-            <div class="relative text-center bg-white rounded-lg shadow dark:bg-gray-700">
+            <div class="relative text-center bg-white rounded-lg shadow dark:bg-gray-800">
                 <!-- Modal header -->
                 <div class="flex justify-between items-start p-5 rounded-t border-b dark:border-gray-600">
                     <h3 id="titulo" class="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white"></h3>
@@ -153,104 +153,19 @@
                     </button>
                 </div>
                 <!-- Modal body -->
-                <div class="p-6 space-y-6">
-                    <h5>Ingredients</h5>
-                    <ul id="ingredientes" class="text-base leading-relaxed text-gray-500 dark:text-gray-400"></ul>
-                    <h5>Preparation</h5>
-                    <ul id="instrucciones" class="text-base leading-relaxed text-gray-500 dark:text-gray-400"></ul>
+                <div id="modal-body" class="p-6 space-y-6">
+                    <h5 class="font-semibold dark:text-white">Ingredients</h5>
+                    <div id="ingredientes" class="text-base leading-relaxed text-gray-500 dark:text-gray-400"></div>
+                    <h5 class="font-semibold dark:text-white">Preparation</h5>
+                    <div id="instrucciones" class="text-base leading-relaxed text-gray-500 dark:text-gray-400"></div>
                 </div>
-                
+                <!-- Modal footer -->
+                <div id="modal-footer" class="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600">
+                </div>
             </div>
         </div>
     </div>
 
     <script src="app.js"></script>
-    <script>
-        let recetas = []
-        let htmlStr = ''
-        let i = 0
-        const filasTabla = document.querySelector('[datos-cuerpo-tabla]')
-        const dataContainer = document.querySelector('[data-container]')
-        const inputBusqueda = document.querySelector('[data-search]')
-
-        inputBusqueda.addEventListener('input', (e) => {
-            const value = e.target.value.toLowerCase()
-            recetas.forEach((receta) => {
-                const esVisible = receta.name.toLowerCase().includes(value)
-                receta.element.classList.toggle('hidden', !esVisible)
-            })
-        })
-
-        // fetch devuelve una promise
-        fetch('/api/recipes') // GET por defecto, se ejecuta al cargar la página
-            .then(res => res.json()) // respuesta en json, otra promise
-            .then(filas => { // arrow function
-                recetas = filas.map(fila => { // bucle ES6, arrow function
-                    i++
-                    // A traves de los atributos que les he dado a los elementos del template
-                    // los pueso recoger aqui y cambiarle los valores a cada campo
-                    const row = filasTabla.content.cloneNode(true).children[0]
-                    const id = row.querySelector('[data-id]')
-                    const name = row.querySelector('[data-name]')
-
-                    id.textContent = i
-                    name.textContent = fila.name
-                    name.setAttribute('onclick', `detalle('${i - 1}')`)
-
-                    dataContainer.append(row)
-
-                    return {
-                        id: i,
-                        name: fila.name,
-                        ingredients: fila.ingredients,
-                        instructions: fila.instructions,
-                        element: row
-                    }
-                })
-            })
-            // set the modal menu element
-            const targetEl = document.getElementById('modalEl');
-
-            // options with default values
-            const options = {
-                placement: 'center-center',
-                backdrop: 'dynamic',
-                backdropClasses: 'bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
-                onHide: () => {
-                    console.log('modal is hidden');
-                },
-                onShow: () => {
-                    console.log(`modal is shown`);
-                },
-                onToggle: () => {
-                    console.log('modal has been toggled');
-                }
-            };
-
-            const modal = new Modal(targetEl, options);
-
-            const detalle = (i) => {
-                const {name, ingredients, instructions} = recetas[i]
-
-                document.getElementById('titulo').innerHTML = name
-                ingrString = ''
-                ingredients.forEach(ingrediente => {
-                    ingrString += `<li>${ingrediente.name}</li>`
-                })
-                document.getElementById('ingredientes').innerHTML = `<ul>${ingrString}</ul>`
-                let instrString = ''
-                instructions.forEach(instruccion => {
-                    instrString += `<li>${instruccion}</li>`
-                })
-                
-                document.getElementById('instrucciones').innerHTML = `<ul>${instrString}</ul>`
-                                
-                modal.show()
-                const cerrar = document.getElementById('close-modal')
-                cerrar.addEventListener('click', () => {
-                    modal.hide()
-                });
-            }
-    </script>
 </body>
 </html>

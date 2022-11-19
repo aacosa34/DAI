@@ -73,3 +73,150 @@ themeToggleButton.addEventListener('click', () => {
     setLightTheme()
   }
 })
+
+let recetas = []
+let i = 0
+const filasTabla = document.querySelector('[datos-cuerpo-tabla]')
+const dataContainer = document.querySelector('[data-container]')
+const inputBusqueda = document.querySelector('[data-search]')
+
+inputBusqueda.addEventListener('input', (e) => {
+  const value = e.target.value.toLowerCase()
+  recetas.forEach((receta) => {
+    const esVisible = receta.name.toLowerCase().includes(value)
+    receta.element.classList.toggle('hidden', !esVisible)
+  })
+})
+
+// fetch devuelve una promise
+fetch('/api/recipes') // GET por defecto, se ejecuta al cargar la página
+  .then(res => res.json()) // respuesta en json, otra promise
+  .then(filas => { // arrow function
+    recetas = filas.map(fila => { // bucle ES6, arrow function
+      i++
+      // A traves de los atributos que les he dado a los elementos del template
+      // los pueso recoger aqui y cambiarle los valores a cada campo
+      const row = filasTabla.content.cloneNode(true).children[0]
+      const id = row.querySelector('[data-id]')
+      const name = row.querySelector('[data-name]')
+
+      id.textContent = i
+      name.textContent = fila.name
+      name.setAttribute('onclick', `detalle('${i - 1}')`)
+
+      dataContainer.append(row)
+
+      return {
+        id: i,
+        name: fila.name,
+        ingredients: fila.ingredients,
+        instructions: fila.instructions,
+        element: row
+      }
+    })
+  })
+// set the modal menu element
+const targetEl = document.getElementById('modalEl')
+
+// options with default values
+const options = {
+  placement: 'center-center',
+  backdrop: 'dynamic',
+  backdropClasses: 'bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
+  onHide: () => {
+    console.log('modal is hidden')
+  },
+  onShow: () => {
+    console.log('modal is shown')
+  },
+  onToggle: () => {
+    console.log('modal has been toggled')
+  }
+}
+
+const modal = new Modal(targetEl, options)
+
+const closeModal = () => {
+  modal.hide()
+}
+
+const detalle = (i) => {
+  const { name, ingredients, instructions } = recetas[i]
+
+  document.getElementById('titulo').innerHTML = name
+  let ingrString = ''
+  ingredients.forEach(ingrediente => {
+    ingrString += `<li>${ingrediente.name}</li>`
+  })
+  document.getElementById('ingredientes').innerHTML = `<ul>${ingrString}</ul>`
+  let instrString = ''
+  instructions.forEach(instruccion => {
+    instrString += `<li>${instruccion}</li>`
+  })
+
+  document.getElementById('instrucciones').innerHTML = `<ul>${instrString}</ul>`
+
+  modal.show()
+  const cerrar = document.getElementById('close-modal')
+  cerrar.addEventListener('click', () => {
+    modal.hide()
+  })
+}
+
+const addRecetaButton = document.getElementById('add-recipe')
+
+addRecetaButton.addEventListener('click', () => {
+  const title = document.getElementById('titulo')
+  title.innerHTML = 'New recipe'
+
+  const body = document.getElementById('modal-body')
+  const footer = document.getElementById('modal-footer')
+  const previousFooter = footer.innerHTML
+  const previousBody = body.innerHTML
+
+  body.innerHTML = `
+    <div class="flex flex-col justify-center items-center">
+      <div class="mb-6">
+        <label for="new-recipe-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+        <input type="text" id="new-recipe-name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Name of the recipe...">
+      </div>
+      
+      <label for="new-recipe-ingredients" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ingredients</label>
+      <textarea id="new-recipe-ingredients" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-4" placeholder="Write the ingredients of the recipe..."></textarea>
+
+      <label for="new-recipe-instructions" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Instructions</label>
+      <textarea id="new-recipe-instructions" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write the instructions of the recipe..."></textarea>
+
+    </div>
+  `
+
+  footer.innerHTML = `
+    <div class="flex justify-end">
+      <button id="save-recipe" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" data-dismiss="modal">Save recipe</button>
+      <button id="close-modal" type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Dismiss</button>
+    </div>
+  `
+  modal.show()
+
+  const saveRecipe = document.getElementById('save-recipe')
+
+  saveRecipe.addEventListener('click', () => {
+    const name = document.getElementById('new-recipe-name').value
+    const ingredients = document.getElementById('new-recipe-ingredients').value
+    ingredients.split('\n').forEach((ingrediente) => {
+      console.log(ingrediente)
+    })
+  })
+
+  // Añade evento para cerrar el modal y regenerar el contenido anterior para cada
+  // elemento que tenga el id close-modal
+  const cerrar = document.querySelectorAll('#close-modal')
+  cerrar.forEach((elemento) => {
+    elemento.addEventListener('click', () => {
+      // Cuando cerramos el modal, devolvemos su estado anterior
+      body.innerHTML = previousBody
+      footer.innerHTML = previousFooter
+      modal.hide()
+    })
+  })
+})
