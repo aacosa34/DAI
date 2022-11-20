@@ -41,7 +41,7 @@
                         <th scope="col" class="py-3 px-6">
                             Enlace a la receta
                         </th>
-                        {% if not user.is_superuser or not user.is_staff %}
+                        {% if user.is_superuser or user.is_staff %}
                         <th>
                             Acciones
                         </th>
