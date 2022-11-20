@@ -88,6 +88,7 @@ inputBusqueda.addEventListener('input', (e) => {
   })
 })
 
+// GESTIONA EL GET
 // fetch devuelve una promise
 fetch('/api/recipes') // GET por defecto, se ejecuta al cargar la página
   .then(res => res.json()) // respuesta en json, otra promise
@@ -95,14 +96,20 @@ fetch('/api/recipes') // GET por defecto, se ejecuta al cargar la página
     recetas = filas.map(fila => { // bucle ES6, arrow function
       i++
       // A traves de los atributos que les he dado a los elementos del template
-      // los pueso recoger aqui y cambiarle los valores a cada campo
+      // los puedo recoger aqui y cambiarle los valores a cada campo
       const row = filasTabla.content.cloneNode(true).children[0]
       const id = row.querySelector('[data-id]')
       const name = row.querySelector('[data-name]')
+      const edit = row.querySelector('[data-edit]')
+      const del = row.querySelector('[data-delete]')
+      const mongoId = row.querySelector('[data-mongo-id]')
 
       id.textContent = i
       name.textContent = fila.name
       name.setAttribute('onclick', `detalle('${i - 1}')`)
+      edit.setAttribute('onclick', `edit('${i - 1}', '${fila._id}')`)
+      del.setAttribute('onclick', `remove('${i - 1}', '${fila._id}')`)
+      mongoId.textContent = fila._id
 
       dataContainer.append(row)
 
@@ -111,10 +118,12 @@ fetch('/api/recipes') // GET por defecto, se ejecuta al cargar la página
         name: fila.name,
         ingredients: fila.ingredients,
         instructions: fila.instructions,
+        mongoId: fila._id,
         element: row
       }
     })
   })
+
 // set the modal menu element
 const targetEl = document.getElementById('modalEl')
 
@@ -134,12 +143,10 @@ const options = {
   }
 }
 
+// eslint-disable-next-line no-undef
 const modal = new Modal(targetEl, options)
 
-const closeModal = () => {
-  modal.hide()
-}
-
+// eslint-disable-next-line no-unused-vars
 const detalle = (i) => {
   const { name, ingredients, instructions } = recetas[i]
 
@@ -157,12 +164,13 @@ const detalle = (i) => {
   document.getElementById('instrucciones').innerHTML = `<ul>${instrString}</ul>`
 
   modal.show()
-  const cerrar = document.getElementById('close-modal')
+  const cerrar = document.querySelector('[closes-modal]')
   cerrar.addEventListener('click', () => {
     modal.hide()
   })
 }
 
+// GESTIONA EL POST
 const addRecetaButton = document.getElementById('add-recipe')
 
 addRecetaButton.addEventListener('click', () => {
@@ -171,8 +179,9 @@ addRecetaButton.addEventListener('click', () => {
 
   const body = document.getElementById('modal-body')
   const footer = document.getElementById('modal-footer')
-  const previousFooter = footer.innerHTML
+
   const previousBody = body.innerHTML
+  const previousFooter = footer.innerHTML
 
   body.innerHTML = `
     <div class="flex flex-col justify-center items-center">
@@ -182,35 +191,92 @@ addRecetaButton.addEventListener('click', () => {
       </div>
       
       <label for="new-recipe-ingredients" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ingredients</label>
-      <textarea id="new-recipe-ingredients" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-4" placeholder="Write the ingredients of the recipe..."></textarea>
+      <textarea id="new-recipe-ingredients" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 " placeholder="Write the ingredients of the recipe..."></textarea>
+      <small class="text-gray-500 dark:text-gray-400 mb-4">Separate each ingredient with a line break</small>
 
       <label for="new-recipe-instructions" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Instructions</label>
       <textarea id="new-recipe-instructions" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write the instructions of the recipe..."></textarea>
+      <small class="text-gray-500 dark:text-gray-400">Separate each instruction with a line break</small>
 
     </div>
   `
 
   footer.innerHTML = `
     <div class="flex justify-end">
-      <button id="save-recipe" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" data-dismiss="modal">Save recipe</button>
-      <button id="close-modal" type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Dismiss</button>
+      <button closes-modal id="save-recipe" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" data-dismiss="modal">Save recipe</button>
+      <button closes-modal type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Dismiss</button>
     </div>
   `
   modal.show()
 
-  const saveRecipe = document.getElementById('save-recipe')
+  const saveRecipeButton = document.getElementById('save-recipe')
 
-  saveRecipe.addEventListener('click', () => {
-    const name = document.getElementById('new-recipe-name').value
-    const ingredients = document.getElementById('new-recipe-ingredients').value
-    ingredients.split('\n').forEach((ingrediente) => {
-      console.log(ingrediente)
+  const newName = document.getElementById('new-recipe-name')
+  const ingredients = document.getElementById('new-recipe-ingredients')
+  const instructions = document.getElementById('new-recipe-instructions')
+
+  saveRecipeButton.addEventListener('click', async () => {
+    const newRecipe = {
+      name: newName.value,
+      ingredients: ingredients.value.split('\n').map(ingrediente => {
+        return {
+          name: ingrediente,
+          quantity: {
+            value: 1,
+            unit: 'unit'
+          }
+        }
+      }),
+      instructions: instructions.value.split('\n'),
+      slug: newName.value.toLowerCase().replace(' ', '-'),
+      garnish: ''
+    }
+    let recetaMongo = {}
+    await fetch('/api/recipes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newRecipe)
     })
+      .then(res => res.json())
+      .then(data => { recetaMongo = data })
+
+    console.log(recetaMongo)
+
+    i++
+    // Meto la nueva receta al final de la vista
+    const row = filasTabla.content.cloneNode(true).children[0]
+    const id = row.querySelector('[data-id]')
+    const name = row.querySelector('[data-name]')
+    const edit = row.querySelector('[data-edit]')
+    const del = row.querySelector('[data-delete]')
+    const mongoId = row.querySelector('[data-mongo-id]')
+
+    id.textContent = i
+    name.textContent = newRecipe.name
+    name.setAttribute('onclick', `detalle('${i - 1}')`)
+    edit.setAttribute('onclick', `edit('${i - 1}', '${recetaMongo._id}')`)
+    del.setAttribute('onclick', `remove('${i - 1}', '${recetaMongo._id}')`)
+    mongoId.textContent = recetaMongo._id
+
+    dataContainer.append(row)
+
+    recetas.push({
+      id: i,
+      name: newRecipe.name,
+      ingredients: newRecipe.ingredients,
+      instructions: newRecipe.instructions,
+      mongoId: recetaMongo._id,
+      element: row
+    })
+
+    modal.hide()
   })
 
   // Añade evento para cerrar el modal y regenerar el contenido anterior para cada
   // elemento que tenga el id close-modal
-  const cerrar = document.querySelectorAll('#close-modal')
+  const cerrar = document.querySelectorAll('[closes-modal]')
   cerrar.forEach((elemento) => {
     elemento.addEventListener('click', () => {
       // Cuando cerramos el modal, devolvemos su estado anterior
@@ -220,3 +286,178 @@ addRecetaButton.addEventListener('click', () => {
     })
   })
 })
+
+// GESTIONA EL PUT
+// eslint-disable-next-line no-unused-vars
+const edit = (id, mongoId) => {
+  id = parseInt(id)
+  const receta = recetas[id]
+  const ingredients = receta.ingredients.map(ingrediente => ingrediente.name).join('\n')
+  const instructions = receta.instructions.join('\n')
+
+  const title = document.getElementById('titulo')
+
+  title.innerHTML = `Edit recipe: ${receta.name}`
+
+  const body = document.getElementById('modal-body')
+  const footer = document.getElementById('modal-footer')
+
+  const previousBody = body.innerHTML
+  const previousFooter = footer.innerHTML
+
+  body.innerHTML = `
+    <div class="flex flex-col justify-center items-center">
+        <div class="mb-6">
+          <label for="edit-recipe-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+          <input type="text" id="edit-recipe-name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Name of the recipe..." value="${receta.name}">
+        </div>
+        
+        <label for="edit-recipe-ingredients" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ingredients</label>
+        <textarea id="edit-recipe-ingredients" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 " placeholder="Write the ingredients of the recipe...">${ingredients}</textarea>
+        <small class="text-gray-500 dark:text-gray-400 mb-4">Separate each ingredient with a line break</small>
+
+        <label for="edit-recipe-instructions" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Instructions</label>
+        <textarea id="edit-recipe-instructions" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write the instructions of the recipe...">${instructions}</textarea>
+        <small class="text-gray-500 dark:text-gray-400">Separate each instruction with a line break</small>
+
+      </div>
+    `
+
+  footer.innerHTML = `
+    <div class="flex justify-end">
+      <button closes-modal id="edit-recipe" type="button" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800" data-dismiss="modal">Edit recipe</button>
+      <button closes-modal type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Dismiss</button>
+    </div>
+  `
+
+  modal.show()
+
+  console.log(receta)
+
+  const editReceta = document.getElementById('edit-recipe')
+  const newName = document.getElementById('edit-recipe-name')
+  const newIngredients = document.getElementById('edit-recipe-ingredients')
+  const newInstructions = document.getElementById('edit-recipe-instructions')
+
+  editReceta.addEventListener('click', async () => {
+    const newRecipe = {
+      name: newName.value,
+      ingredients: newIngredients.value.split('\n').map(ingrediente => {
+        return {
+          name: ingrediente,
+          quantity: {
+            value: 1,
+            unit: 'unit'
+          }
+        }
+      }),
+      instructions: newInstructions.value.split('\n'),
+      slug: newName.value.toLowerCase().replace(' ', '-'),
+      garnish: ''
+    }
+
+    let recetaMongo = {}
+    await fetch(`/api/recipes/${mongoId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newRecipe)
+    }).then(res => res.json())
+      .then(data => { recetaMongo = data })
+
+    const fila = recetas[id].element
+    dataContainer.removeChild(fila)
+
+    const row = filasTabla.content.cloneNode(true).children[0]
+    const dataId = row.querySelector('[data-id]')
+    const name = row.querySelector('[data-name]')
+    const edit = row.querySelector('[data-edit]')
+    const del = row.querySelector('[data-delete]')
+    const dataMongoId = row.querySelector('[data-mongo-id]')
+
+    dataId.textContent = id + 1
+    name.textContent = newRecipe.name
+    name.setAttribute('onclick', `detalle('${id}')`)
+    edit.setAttribute('onclick', `edit('${id}', '${recetaMongo._id}')`)
+    del.setAttribute('onclick', `remove('${id}', '${recetaMongo._id}')`)
+    dataMongoId.textContent = recetaMongo._id
+
+    dataContainer.appendChild(row)
+
+    recetas[id] = {
+      id,
+      name: newRecipe.name,
+      ingredients: newRecipe.ingredients,
+      instructions: newRecipe.instructions,
+      mongoId: recetaMongo._id,
+      element: row
+    }
+
+    modal.hide()
+  })
+
+  const cerrar = document.querySelectorAll('[closes-modal]')
+  cerrar.forEach((elemento) => {
+    elemento.addEventListener('click', () => {
+      // Cuando cerramos el modal, devolvemos su estado anterior
+      body.innerHTML = previousBody
+      footer.innerHTML = previousFooter
+      modal.hide()
+    })
+  })
+}
+
+// GESTIONA EL DELETE
+// eslint-disable-next-line no-unused-vars
+const remove = (id, mongoId) => {
+  const body = document.getElementById('modalEl')
+  const name = recetas[id].name
+
+  const previousBody = body.innerHTML
+
+  body.innerHTML = `
+    <div class="relative w-full max-w-md h-full md:h-auto">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <button closes-modal type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-toggle="popup-modal">
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+            <div class="p-6 text-center">
+                <svg aria-hidden="true" class="mx-auto mb-4 w-14 h-14 text-gray-400 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to delete ${name}?</h3>
+                <button id="confirm-delete" data-modal-toggle="popup-modal" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+                    Yes, I'm sure
+                </button>
+                <button closes-modal data-modal-toggle="popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancel</button>
+            </div>
+        </div>
+    </div>
+  `
+  modal.show()
+
+  const confirmar = document.getElementById('confirm-delete')
+
+  confirmar.addEventListener('click', async () => {
+    console.log(`borra ${mongoId}`)
+    fetch(`/api/recipes/${mongoId}`, {
+      method: 'DELETE'
+    })
+
+    const fila = recetas[id].element
+    dataContainer.removeChild(fila)
+
+    recetas.splice(id, 1)
+
+    modal.hide()
+  })
+
+  const cerrar = document.querySelectorAll('[closes-modal]')
+  cerrar.forEach((elemento) => {
+    elemento.addEventListener('click', () => {
+      // Cuando cerramos el modal, devolvemos su estado anterior
+      body.innerHTML = previousBody
+      modal.hide()
+    })
+  })
+}

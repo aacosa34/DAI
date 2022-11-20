@@ -122,11 +122,14 @@
                             </td>
                             <td class="py-4 px-6">
                                 <button
+                                    data-edit
                                     class="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800"><span
                                         class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-800 rounded-md group-hover:bg-opacity-0">Edit</span></button>
                                 <button
+                                    data-delete
                                     class="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"><span
                                         class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-800 rounded-md group-hover:bg-opacity-0">Delete</span></button>
+                                <div hidden data-mongo-id></div>
                             </td>
                         </tr>
                     </template>
@@ -143,7 +146,7 @@
                 <!-- Modal header -->
                 <div class="flex justify-between items-start p-5 rounded-t border-b dark:border-gray-600">
                     <h3 id="titulo" class="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white"></h3>
-                    <button id="close-modal" type="button"
+                    <button closes-modal type="button"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"

@@ -8,6 +8,7 @@ const port = 3000
 
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.static(path.join(__dirname, 'node_modules')))
+app.use(express.json())
 
 app.get('/', (req, res) => {
   res.sendFile('index.html')
@@ -20,31 +21,44 @@ app.get('/api/recipes', (req, res) => {
 })
 
 app.post('/api/recipes', (req, res) => {
-  const recipe = req.body
+  const { name, instructions, ingredients, slug, garnish } = req.body
 
-  if (!recipe.slug) {
-    return res.status(400).json({
-      error: 'content missing'
-    })
+  if (!name || !instructions || !ingredients || !slug) {
+    res.status(400).json({ error: 'Missing required fields' })
   }
 
   const newRecipe = new Recipe({
-    name: recipe.name,
-    ingredients: recipe.ingredients,
-    garnish: recipe.garnish,
-    instructions: recipe.instructions,
-    slug: recipe.slug
+    name,
+    instructions,
+    ingredients,
+    slug,
+    garnish
   })
 
   newRecipe.save().then(savedRecipe => {
-    res.json(savedRecipe)
+    res.status(200).send(savedRecipe)
   })
 })
 
 app.put('/api/recipes/:id', (req, res) => {
+  const { id } = req.params
+  const { name, instructions, ingredients, slug, garnish } = req.body
+
+  if (!name || !instructions || !ingredients || !slug) {
+    res.status(400).json({ error: 'Missing required fields' })
+  }
+
+  Recipe.findByIdAndUpdate(id, { name, instructions, ingredients, slug, garnish }, { new: true }).then(updatedRecipe => {
+    res.status(200).send(updatedRecipe)
+  })
 })
 
 app.delete('/api/recipes/:id', (req, res) => {
+  const { id } = req.params
+
+  Recipe.findByIdAndDelete(id).then(() => {
+    res.status(200).send()
+  }).catch(err => res.json({ 'Recipe not found': err }))
 })
 
 app.listen(port, () => {
