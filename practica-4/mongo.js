@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
-const connectionString = 'mongodb://localhost:27017/cockteles'
+const connectionString = 'mongodb://mongo_db:27017/cockteles'
 
 // conexion a MongoDB
-mongoose.connect(connectionString,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
+mongoose.connect(connectionString, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+
+})
   .then(() => {
     console.log('Database connected')
   })

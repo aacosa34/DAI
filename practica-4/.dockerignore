@@ -1,0 +1,7 @@
+datos_db
+dump
+node_modules
+.gitignore
+Dockerfile
+docker-compose.yml
+.dockerignore

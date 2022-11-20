@@ -1,18 +1,29 @@
 # docker-compose.yml
+version: "3"
+
 services:
-  mongo:
+  mongo_db:
+    container_name: db_container
     image: mongo:latest
     restart: always
     ports:
       - 27017:27017
     volumes:
       - ./dump:/dump
-      - ./datos_db:/data/db 
-    
-  mongo-express:
-    image: mongo-express
-    depends_on: 
-      - mongo
-    restart: always
+      - ./datos_db:/data/db
+    networks:
+      - practica-4
+
+  node:
+    container_name: node_API_container
+    build: .
     ports:
-      - 8081:8081
+      - 4000:3000
+    depends_on:
+      - mongo_db
+    networks:
+      - practica-4
+
+networks:
+  practica-4:
+    driver: bridge
