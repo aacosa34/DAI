@@ -17,6 +17,7 @@ specifiers:
   postcss: ^8.4.19
   react: ^18.2.0
   react-dom: ^18.2.0
+  react-icons: ^4.6.0
   tailwindcss: ^3.2.4
   vite: ^3.2.3
 
@@ -39,6 +40,7 @@ devDependencies:
   eslint-plugin-react: 7.31.11_eslint@8.28.0
   nodemon: 2.0.20
   postcss: 8.4.19
+  react-icons: 4.6.0_react@18.2.0
   tailwindcss: 3.2.4_postcss@8.4.19
   vite: 3.2.4
 
@@ -3316,6 +3318,14 @@ packages:
       scheduler: 0.23.0
     dev: false
 
+  /react-icons/4.6.0_react@18.2.0:
+    resolution: {integrity: sha512-rR/L9m9340yO8yv1QT1QurxWQvWpbNHqVX0fzMln2HEb9TEIrQRGsqiNFQfiv9/JEUbyHmHPlNTB2LWm2Ttz0g==}
+    peerDependencies:
+      react: '*'
+    dependencies:
+      react: 18.2.0
+    dev: true
+
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
     dev: true
@@ -3330,7 +3340,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
-    dev: false
 
   /read-cache/1.0.0:
     resolution: {integrity: sha512-Owdv/Ft7IjOgm/i0xvNDZ1LrRANRfew4b2prF3OWMQLxLfu3bS8FVhCsrSCMK4lR56Y9ya+AThoTpDCTxCmpRA==}
