@@ -1,4 +1,4 @@
-import TableBody from './TableBody'
+// import TableBody from './TableBody'
 
 const Table = () => {
   return (
@@ -17,7 +17,6 @@ const Table = () => {
             </th>
           </tr>
         </thead>
-        <TableBody />
       </table>
     </div>
   )

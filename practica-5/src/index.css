@@ -1,3 +1,63 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.toggleSwitcher {
+  position: relative;
+  display: inline-block;
+  width: 70px;
+  height: 42px;
+}
+
+.toggleSwitcher input {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.toggleBtn {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  background-color: rgb(87, 40, 241);
+}
+
+.toggleBtn:before {
+  position: absolute;
+  content: "";
+  height: 31px;
+  width: 31px;
+  left: 6px;
+  bottom: 6px;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  background-color: #ffffff;
+}
+
+input:checked + .toggleBtn {
+  background-color: #000;
+}
+
+input:focus + .toggleBtn {
+  box-shadow: 0 0 1px #5621f3;
+}
+
+input:checked + .toggleBtn:before {
+  -webkit-transform: translateX(25px);
+  -ms-transform: translateX(25px);
+  transform: translateX(25px);
+}
+
+.toggleBtn.round {
+  border-radius: 34px;
+}
+
+.toggleBtn.round:before {
+  border-radius: 50%;
+}
