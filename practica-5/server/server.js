@@ -1,9 +1,9 @@
-import './mongo.js'
-import { express } from 'express'
-import { Recipe } from './models/Recipe.js'
+const Recipe = require('./models/Recipe.js')
+require('./mongo.js')
+const express = require('express')
 
-const app = express()
 const port = 3000
+const app = express()
 
 app.use(express.json())
 

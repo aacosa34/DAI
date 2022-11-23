@@ -1,4 +1,4 @@
-import { connect } from 'mongoose'
+const connect = require('mongoose')
 const connectionString = 'mongodb://mongo_db:27017/cockteles'
 
 // conexion a MongoDB

@@ -1,5 +1,5 @@
 # Dockerfile
-FROM node:alpine
+FROM node:18-alpine
 # directorio dentro del contenedor para el código
 WORKDIR /urs/src/app  
 COPY package*.json ./

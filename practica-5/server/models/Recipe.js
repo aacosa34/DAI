@@ -23,4 +23,4 @@ const Recipe = model('Recipe', recipeSchema)
 //   mongoose.connection.close()
 // })
 
-module.exports = Recipe
+export default Recipe
