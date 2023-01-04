@@ -1,0 +1,22 @@
+{
+    "blogs": [
+        {
+            "title": "My new website",
+            "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras congue id urna nec faucibus. Mauris venenatis placerat ligula sit amet eleifend. In ante orci, condimentum in pharetra non, faucibus id metus. Sed accumsan pharetra enim eu hendrerit. Phasellus maximus metus libero, sit amet feugiat elit laoreet vitae. Suspendisse leo nulla, semper in justo at, vehicula condimentum metus. Ut quis ipsum id ante maximus suscipit. Cras arcu lectus, suscipit sit amet sem id, lacinia viverra augue. Suspendisse potenti. In luctus, ligula id feugiat ultricies, lectus quam ullamcorper metus, id dapibus orci sem sed enim. Nam molestie neque eu sem posuere iaculis. Sed dictum maximus libero vel placerat.",
+            "author": "mario",
+            "id": 1
+        },
+        {
+            "title": "Welcome party!",
+            "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras congue id urna nec faucibus. Mauris venenatis placerat ligula sit amet eleifend. In ante orci, condimentum in pharetra non, faucibus id metus. Sed accumsan pharetra enim eu hendrerit. Phasellus maximus metus libero, sit amet feugiat elit laoreet vitae. Suspendisse leo nulla, semper in justo at, vehicula condimentum metus. Ut quis ipsum id ante maximus suscipit. Cras arcu lectus, suscipit sit amet sem id, lacinia viverra augue. Suspendisse potenti. In luctus, ligula id feugiat ultricies, lectus quam ullamcorper metus, id dapibus orci sem sed enim. Nam molestie neque eu sem posuere iaculis. Sed dictum maximus libero vel placerat.",
+            "author": "yoshi",
+            "id": 2
+        },
+        {
+            "title": "Web dev top tips",
+            "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras congue id urna nec faucibus. Mauris venenatis placerat ligula sit amet eleifend. In ante orci, condimentum in pharetra non, faucibus id metus. Sed accumsan pharetra enim eu hendrerit. Phasellus maximus metus libero, sit amet feugiat elit laoreet vitae. Suspendisse leo nulla, semper in justo at, vehicula condimentum metus. Ut quis ipsum id ante maximus suscipit. Cras arcu lectus, suscipit sit amet sem id, lacinia viverra augue. Suspendisse potenti. In luctus, ligula id feugiat ultricies, lectus quam ullamcorper metus, id dapibus orci sem sed enim. Nam molestie neque eu sem posuere iaculis. Sed dictum maximus libero vel placerat.",
+            "author": "mario",
+            "id": 3
+        }
+    ]
+}
